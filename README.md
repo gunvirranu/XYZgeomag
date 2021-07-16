@@ -1,3 +1,10 @@
+## This fork contains a pure C99 rewrite of the XYZgeomag library.
+
+All credit for the original belongs to Nathan Zimmerberg.\
+Many thanks to Nathan for open-sourcing their code.
+
+Below is the rest of the unmodified `README.md`, which does not make reference to any changes and so is not applicable.
+
 # XYZgeomag
 Lightweight C++ header-only library for calculating the magnetic field on earth given geocentric cartesian coordinates instead of latitude, longitude, and altitude. Compatible with CUDA and Arduino.
 
