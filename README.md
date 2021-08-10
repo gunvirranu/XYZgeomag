@@ -1,9 +1,14 @@
 ## This fork contains a pure C99 rewrite of the XYZgeomag library.
 
+[![Test][ci_badge]][ci]
+
 All credit for the original belongs to Nathan Zimmerberg.\
 Many thanks to Nathan for open-sourcing their code.
 
-Below is the rest of the unmodified `README.md`, which does not make reference to any changes and so is not applicable.
+Below is the rest of the original `README.md`, which does not make reference to any changes in this fork and so is not applicable.
+
+[ci]: https://github.com/gunvirranu/XYZgeomag/actions/workflows/test.yaml "Github Actions"
+[ci_badge]: https://github.com/gunvirranu/XYZgeomag/actions/workflows/test.yaml/badge.svg?branch=master "Test CI"
 
 # XYZgeomag
 
