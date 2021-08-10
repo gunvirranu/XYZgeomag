@@ -49,9 +49,9 @@ TEST_CASE( "geomag test %s of WMM2020 model", "[GeoMag]" ) {
     double out[3];
     double truth[3] = {%s, %s, %s};
     geoMag(%s, &in, &out);
-    CHECK( out[0]*1E9 == Approx(truth[0]*1E9).margin(%s) );
-    CHECK( out[1]*1E9 == Approx(truth[1]*1E9).margin(%s) );
-    CHECK( out[2]*1E9 == Approx(truth[2]*1E9).margin(%s) );
+    CHECK( abs(out[0]*1E9 - truth[0]*1E9) <= (%s) );
+    CHECK( abs(out[1]*1E9 - truth[1]*1E9) <= (%s) );
+    CHECK( abs(out[2]*1E9 - truth[2]*1E9) <= (%s) );
 }
 
 """ % (
@@ -74,7 +74,7 @@ if __name__ == '__main__':
     bes = [-146.3,109.9,15772.1,-185.5,104.9,14799.5,1.1,-42.2,15776.7,-44.5,-35.3,14803.0]
     bds = [54606.0,-10932.5,-52480.8,52429.1,-10474.8,-49969.4,54713.4,-10809.5,-52251.6,52527.0,-10362.0,-49755.3]
 
-    margin = 5 # nT error acceptable
+    margin = 0.1 # nT error acceptable
     main(
         header_to_test,
         np.array(dates),
