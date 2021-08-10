@@ -1,0 +1,26 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Compile geomag
+        run: gcc -c -std=c99 -pedantic -Wall -Wextra -Werror geomag.c
+
+      - name: Compile tests
+        working-directory: ${{github.workspace}}/test_codegen
+        run: g++ -std=c++14 -Wall -Wextra geomag_test.cpp ../geomag.o -o test
+
+      - name: Run tests
+        working-directory: ${{github.workspace}}/test_codegen
+        run: ./test
