@@ -47,19 +47,19 @@ struct WMM_COEFF_SET {
 // Table of coefficients
 static const struct WMM_COEFF_SET WMM_COEFFS[WMM_TOT_COEFFS];
 
-static int calc_index(int n, int m) {
+static int calc_index(const int n, const int m) {
     return m * (2 * WMM_NMAX - m + 1) / 2 + n;
 }
 
-static real C(int idx, real t_since) {
+static real C(const int idx, const real t_since) {
     return WMM_COEFFS[idx].main_field_c + t_since * WMM_COEFFS[idx].sec_var_c;
 }
 
-static real S(int idx, real t_since) {
+static real S(const int idx, const real t_since) {
     return WMM_COEFFS[idx].main_field_s + t_since * WMM_COEFFS[idx].sec_var_s;
 }
 
-void geoMag(const real dyear, const real (*pos_itrf)[3], real (*mag_itrf)[3]) {
+void geomag(const real dyear, const real (*pos_itrf)[3], real (*mag_itrf)[3]) {
     const real t = dyear - WMM_EPOCH;
     const real x = (*pos_itrf)[0];
     const real y = (*pos_itrf)[1];
@@ -83,7 +83,7 @@ void geoMag(const real dyear, const real (*pos_itrf)[3], real (*mag_itrf)[3]) {
         for (int n = m; n <= WMM_NMAX + 1; ++n) {
             if (m == n) {
                 if (m != 0) {
-                    real prev_V_top = V_top;
+                    const real prev_V_top = V_top;
                     V_top = (2 * m - 1) * (a * V_top - b * W_top);
                     W_top = (2 * m - 1) * (a * W_top + b * prev_V_top);
                     V_prev = 0;
@@ -92,40 +92,40 @@ void geoMag(const real dyear, const real (*pos_itrf)[3], real (*mag_itrf)[3]) {
                     W_nm = W_top;
                 }
             } else {
-                real prev_V_nm = V_nm;
-                real inv_nm = 1.0 / (n - m);
+                const real prev_V_nm = V_nm;
+                const real inv_nm = ((real) 1) / (n - m);
                 V_nm = ((2 * n - 1) * f * V_nm - (n + m - 1) * g * V_prev) * inv_nm;
                 V_prev = prev_V_nm;
-                real prev_W_nm = W_nm;
+                const real prev_W_nm = W_nm;
                 W_nm = ((2 * n - 1) * f * W_nm - (n + m - 1) * g * W_prev) * inv_nm;
                 W_prev = prev_W_nm;
             }
             if (m < WMM_NMAX && n >= m + 2) {
-                int idx = calc_index(n - 1, m + 1);
-                real nm_coeff = 0.5 * (n - m) * (n - m - 1);
+                const int idx = calc_index(n - 1, m + 1);
+                const real nm_coeff = REAL_HALF * (n - m) * (n - m - 1);
                 px += nm_coeff * (C(idx, t) * V_nm + S(idx, t) * W_nm);
                 py += nm_coeff * (-C(idx, t) * W_nm + S(idx, t) * V_nm);
             }
             if (m >= 2 && n >= 2) {
-                int idx = calc_index(n - 1, m - 1);
-                px += 0.5 * (-C(idx, t) * V_nm - S(idx, t) * W_nm);
-                py += 0.5 * (-C(idx, t) * W_nm + S(idx, t) * V_nm);
+                const int idx = calc_index(n - 1, m - 1);
+                px += REAL_HALF * (-C(idx, t) * V_nm - S(idx, t) * W_nm);
+                py += REAL_HALF * (-C(idx, t) * W_nm + S(idx, t) * V_nm);
             }
             if (m == 1 && n >= 2) {
-                int idx = calc_index(n - 1, 0);
+                const int idx = calc_index(n - 1, 0);
                 px += -C(idx, t) * V_nm;
                 py += -C(idx, t) * W_nm;
             }
             if (m < n && n >= 2) {
-                int idx = calc_index(n - 1, m);
+                const int idx = calc_index(n - 1, m);
                 pz += (n - m) * (-C(idx, t) * V_nm - S(idx, t) * W_nm);
             }
         }
     }
-    // Convert to tesla
-    (*mag_itrf)[0] = px * -1e-9;
-    (*mag_itrf)[1] = py * -1e-9;
-    (*mag_itrf)[2] = pz * -1e-9;
+    // Convert [nT] to [T]
+    (*mag_itrf)[0] = px * -REAL_NT2T;
+    (*mag_itrf)[1] = py * -REAL_NT2T;
+    (*mag_itrf)[2] = pz * -REAL_NT2T;
 }
 
 static const struct WMM_COEFF_SET WMM_COEFFS[] = {

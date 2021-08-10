@@ -26,20 +26,22 @@ SOFTWARE.
 #ifndef GEOMAG_H
 #define GEOMAG_H
 
-// Change if needed
+// Can fiddle around with if needed
 typedef double real;
 #define REAL_SQRT sqrt
+#define REAL_HALF 0.5
+#define REAL_NT2T 1e-9
 
-// Returns magnetic field in ITRF.
+// Returns magnetic field vector in ITRF.
 //
 // Uses WMM 2020 (World Magnetic Model - 2020).
 //
 // Args:
-//     pos_itrf: ECEF position vector in ITRF frame [m]
 //     dyear: Decimal year
+//     pos_itrf: ECEF position vector in ITRF frame [m]
 //
 // Returns:
 //     mag_itrf: Magnetic field vector in ITRF frame [T]
-void geoMag(real dyear, const real (*pos_itrf)[3], real (*mag_itrf)[3]);
+void geomag(real dyear, const real (*pos_itrf)[3], real (*mag_itrf)[3]);
 
 #endif // GEOMAG_H
